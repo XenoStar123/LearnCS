@@ -302,11 +302,73 @@
       1
       (* b (expt b (- n 1)))))
 ; iterative
-(define (expt-iter b res n)
+(define (expt-iter b n res)
   (if (= n 0)
       res
-      (expt-iter b (* res b) (- n 1))))
+      (expt-iter b (- n 1) (* res b))))
 
 (define (expt-i b n)
-  (expt-iter b 1 n))
+  (expt-iter b n 1))
+
+(define (fast-expt b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt b (/ n 2))))
+        (else (* b (fast-expt b (- n 1))))))
+
+(define (even? n)
+  (= (remainder n 2) 0))
+
+(define (square x)
+  (* x x))
+
+;; ex 1.16
+(define (fast-expt-i b n)
+  (fast-expt-iter b n 1))
+
+(define (fast-expt-iter b n a)
+  (cond ((= n 0) a)
+        ((even? n) (fast-expt-iter (* b b) (/ n 2) a))
+        (else (fast-expt-iter b (- n 1) (* a b)))))
+
+(fast-expt-i 2 0)
+(fast-expt-i 2 1)
+(fast-expt-i 2 2)
+(fast-expt-i 2 3)
+(fast-expt-i 2 4)
+(fast-expt-i 2 5)
+(fast-expt-i 2 6)
+(fast-expt-i 2 7)
+(fast-expt-i 2 8)
+(fast-expt-i 2 9)
+(fast-expt-i 2 10)
+
+;; ex 1.17
+#|
+(define (* a b)
+  (if (= (b 0))
+      0
+      (+ a (* a (- b 1)))))
+|#
+
+;double halve
+(define (double x)
+  (+ x x))
+
+(define (halve x)
+  (/ x 2))
+
+; recursive
+(define (*-r a b)
+  (cond ((= b 0) 0)
+        ((even? b) (double (*-r a (halve b))))
+        (else (+ a (*-r a (- b 1))))))
+
+; iterative
+(define (*-i a b)
+  (*-iter a b 0))
+
+(define (*-iter a counter result)
+  (cond ((= counter 0) result)
+        ((even? counter) (*-iter (double a) (halve counter) result))
+        (else (*-iter a (- counter 1) (+ result a)))))
 
