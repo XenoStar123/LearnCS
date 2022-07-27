@@ -363,7 +363,6 @@
         ((even? b) (double (*-r a (halve b))))
         (else (+ a (*-r a (- b 1))))))
 
-;; ex 1.18
 ; iterative
 (define (*-i a b)
   (*-iter a b 0))
@@ -373,81 +372,3 @@
         ((even? counter) (*-iter (double a) (halve counter) result))
         (else (*-iter a (- counter 1) (+ result a)))))
 
-;; ex 1.19
-(define (fib n)
-  (fib-iter 1 0 0 1 n))
-
-(define (fib-iter a b p q count)
-  (cond ((= count 0) b)
-        ((even? count)
-         (fib-iter a
-                   b
-                   (+ (square q) (square p))
-                   (+ (square q) (* 2 p q))
-                   (/ count 2)))
-        (else (fib-iter (+ (* b q) (* a q) (* a p))
-                        (+ (* b p) (* a q))
-                        p
-                        q
-                        (- count 1)))))
-      
-(fib 0)
-(fib 1)
-(fib 2)
-(fib 3)
-(fib 4)
-(fib 5)
-
-;; ex 1.20
-; 最大公约数GCD
-(define (gcd a b)
-  (if (= b 0)
-      a
-      (gcd b (remainder a b))))
-
-; gcd 206 40 2
-(gcd 206 40)
-
-; 正则序
-(gcd 206 40)
-(if (= 40 0) ...)
-(gcd 40 (remainder 206 40))
-; +1
-(if (= (remainder 206 40) 0) ...)
-(if (= 6 0) ...)
-(gcd (remainder 206 40) (remainder 40 (remainder 206 40)))
-; +1+2
-(if (= (remainder 40 (remainder 206 40)) 0) ...)
-(if (= 4 0) ...)
-(gcd (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
-; +1+2+4
-(if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0) ...)
-(if (= 2 0) ...)
-(gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
-; +1+2+4+7
-(if (= (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0) ...)
-(if (= 0 0) ...)
-; +1+2+4+7+4=18
-(remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-2
-
-; 应用序
-(gcd 206 40)
-(if (= 40 0) ...)
-; +1
-(gcd 40 (remainder 206 40))
-(gcd 40 6)
-(if (= 6 0) ...)
-; +1+1
-(gcd 6 (remainder 40 6))
-(gcd 6 4)
-(if (= 4 0) ...)
-; +1+1+1
-(gcd 4 (remainder 6 4))
-(gcd 4 2)
-(if (= 2 0) ...)
-; +1+1+1+1=4
-(gcd 2 (remainder 4 2))
-(gcd 2 0)
-(if (= 0 0) ...)
-2
