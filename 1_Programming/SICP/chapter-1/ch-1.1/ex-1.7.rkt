@@ -1,54 +1,49 @@
 #lang sicp
 ;; ex-1.7
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
 (define (good-enough? guess x)
-  (< (/ (abs (- guess (improve guess x)))
-        guess)
-     0.001))
+  (< (abs (- (square guess) x)) 0.001))
 
-;original test 
-;(define (good-enough? guess x) 
-;  (< (abs (- (square guess) x)) 0.001)) 
-  
-;iterates until guess and next guess are equal, 
-;automatically produces answer to limit of system precision 
-(define (good-enough? guess x) 
-  (= (improve guess x) guess))
+(define (square x)
+  (* x x))
 
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
 
-;; Modified version to look at difference between iterations 
-(define (good-enough? guess x) 
-  (< (abs (- (improve guess x) guess)) 
-     (* guess .001))) 
-  
-;;Alternate version, which adds an "oldguess" variable to the main function. 
-(define (sqrt-iter guess oldguess x) 
-  (if (good-enough? guess oldguess) 
-      guess 
-      (sqrt-iter (improve guess x) guess 
-                 x))) 
-  
-  
-(define (good-enough? guess oldguess) 
-  (< (abs (- guess oldguess)) 
-     (* guess 0.001))) 
-  
-(define (sqrt x) 
-  (sqrt-iter 1.0 2.0 x))
+; 小数good-enough?很难收敛
+(square (sqrt 0.00000134))
+; 大数square会超过上限
+(square(sqrt 134243443255))
+
+(define (good-enough2? guess x)
+  (< (/ (abs (- guess (improve guess x))) guess) 0.001))
+
+;   (< (/ (abs (- guess (improve guess x))) guess)) 0.0001)
 
 
-;Another take on the good-enough? function 
-  
-(define (good-enough? guess x) 
-  (< (/ (abs (- (square guess) x)) guess) (* guess 0.0001)))
+(define (sqrt-iter2 guess x)
+  (if (good-enough2? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
 
-; A guess is good enough when: 
-;    abs(improved-guess - original-guess) / original-guess < 0.001 
-  
-(define (good-enough? guess x) 
-  (< (abs (/ (- (improve guess x) guess) 
-             guess)) 
-     0.001))
+(define (sqrt2 x)
+  (sqrt-iter2 1.0 x))
 
-(define (good-enough? guess x) 
-  (< (abs (- x (square guess)))                                                                  
-     (* 0.0001 x)))   
+; 小数good-enough?很难收敛
+(square (sqrt2 0.00000134))
+; 大数square会超过上限
+(square (sqrt2 134243443255))
+
+(square (sqrt2 9))
